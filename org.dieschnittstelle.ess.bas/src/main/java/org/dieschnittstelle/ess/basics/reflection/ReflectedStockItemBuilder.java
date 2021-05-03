@@ -93,7 +93,7 @@ public class ReflectedStockItemBuilder implements IStockItemBuilder {
 					setter.invoke(instance,Integer.parseInt(value));
 				}
 				else {
-					setter.invoke(instance,value);
+					setter.invoke(instance,value);	// Falls ein String kommt
 				}
 
 			}

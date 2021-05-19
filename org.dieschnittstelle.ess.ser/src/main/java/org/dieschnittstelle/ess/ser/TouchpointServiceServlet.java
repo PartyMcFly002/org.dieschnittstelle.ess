@@ -1,5 +1,7 @@
 package org.dieschnittstelle.ess.ser;
 
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.servlet.http.HttpServlet;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import static org.dieschnittstelle.ess.utils.Utils.*;
 
 import org.apache.logging.log4j.Logger;
+import org.dieschnittstelle.ess.entities.crm.AbstractTouchpoint;
 
 public class TouchpointServiceServlet extends HttpServlet {
 
@@ -52,7 +55,7 @@ public class TouchpointServiceServlet extends HttpServlet {
 	/*
 	 * TODO: SER3 server-side implementation of createNewTouchpoint
 	 */
-	/*
+
 	@Override	
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -64,25 +67,36 @@ public class TouchpointServiceServlet extends HttpServlet {
 
 		try {
 			// create an ObjectInputStream from the request's input stream
-		
+			InputStream requestBody = request.getInputStream();		// Hier ist der eigentlich stream drinn ( das Serialisierte tp-objekt)
+			ObjectInputStream objectInputStream = new ObjectInputStream((requestBody));	// Umwandlung in Ojektreferenzen für Java
+
+			// RESPONSE AUSLESEN
+
 			// read an AbstractTouchpoint object from the stream
-		
+			AbstractTouchpoint tp = (AbstractTouchpoint) objectInputStream.readObject();
+			show("tp: %s" , tp);
+
 			// call the create method on the executor and take its return value
 		
 			// set the response status as successful, using the appropriate
 			// constant from HttpServletResponse
-		
+			response.setStatus(HttpServletResponse.SC_OK);
+
+			// ZURÜCKSCHICKEN
+
 			// then write the object to the response's output stream, using a
 			// wrapping ObjectOutputStream
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(response.getOutputStream());
 		
 			// ... and write the object to the stream
+			objectOutputStream.writeObject(tp);
 		
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
 	}
-	*/
+
 
 	/*
 	 * TODO: SER4 server-side implementation of deleteTouchpoint

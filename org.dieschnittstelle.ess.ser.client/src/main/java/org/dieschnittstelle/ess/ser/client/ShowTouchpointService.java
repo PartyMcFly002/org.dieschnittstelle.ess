@@ -1,13 +1,14 @@
 package org.dieschnittstelle.ess.ser.client;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.util.List;
 import java.util.concurrent.Future;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.logging.log4j.Logger;
 import org.dieschnittstelle.ess.entities.crm.AbstractTouchpoint;
@@ -83,7 +84,7 @@ public class ShowTouchpointService {
 			step();
 		}
 
-		Address addr = new Address("Luxemburger Strasse", "10", "13353",
+		Address addr = new Address("Luxemburger Strasse", "100", "13353",
 				"Berlin");
 		StationaryTouchpoint tp = new StationaryTouchpoint(-1,
 				"BHT Verkaufsstand", addr);
@@ -200,35 +201,80 @@ public class ShowTouchpointService {
 		try {
 
 			// create post request for the api/touchpoints uri
+			HttpPost request = new HttpPost("http://localhost:8080/api/touchpoints");
+																			// Resource touchpoints dem wir ein eine weitere hinzufügen woller
+			// Also die Menge aller touchpoints, die auf Serverseite bekannt sind.
+			// Technisch werden wir den zugriff auf die resource durch ein servlet umsetzene, welches mit dieser URL assoziert ist.
+			// Also ist quasi in der web.xml konfiguriert, dass das Servelet (TouchpointServiceServelet) mit allen request
+			// associert wird, die mit der Url /api/touchpoints/* kommen (Siehe web.xml dern unterste eintrag bei servlet mapping)
+
+
 
 			// create an ObjectOutputStream from a ByteArrayOutputStream - the
 			// latter must be accessible via a variable
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ObjectOutputStream objOut = new ObjectOutputStream(out); // Zum umwandeln von tp in ein übertragbares format zwischen zwei JVM's
+
 
 			// write the object to the output stream
+			objOut.writeObject(tp); // Daten liegen jetzt in "out"
+
+			byte[] transportableObjectData = out.toByteArray();	// fürs bessere verständniss
 
 			// create a ByteArrayEntity and pass it the byte array from the
 			// output stream
+			ByteArrayEntity requestBodyAndHeaderInformation = new ByteArrayEntity(transportableObjectData);
+			// Das zwischenglied .... Headerinformationen
 
 			// set the entity on the request
+			request.setEntity(requestBodyAndHeaderInformation);
+			// Paket ist geschnürt!! Jetzt muss es nur noch abgeschickt werden!
 
+			// Packet abschicken!
 			// execute the request, which will return a Future<HttpResponse> object
+			Future<HttpResponse> responseFuture = client.execute(request,null);
+			// (Versprechen) irgendwann enthält Future ein Objekt welches den typ hat, den ich im typparameter angebe.
+			// Irgendwann in unserem fall, wenn der server auf den ich zugreife, eine antwort geliefert hat.
+			// Ich glaube das ist ein asychchroner aufruf
 
 			// get the response from the Future object
+			HttpResponse response = responseFuture.get();		// wir warten mit get bis ein rüchgabe da ist
+			// get ist so implementiert, das es warte. sobald was von get kommt, dann wissen wir, das was vom server kam
 
 			// log the status line
+			logger.info("entity is set and request is executed");
+			logger.info("response status: " + response.getStatusLine()); // gibt den status vom server zurückkommende status zurück
+			// z.b 200 = OK, 405 =  Method not Allowed usw
+
+			// Wir bekommen am anfang ein 405 (Method not allowed)
+			// Sieplregeln des Framworks! Damit ein Servelet ein Request bearbeiten kann, brauch es eine bearbeitungsmethode!
+			// Das Servelet muss, wenn es den Request vom clinet entgegennimmt, eine gegeignete Methode habe, die der Http-methode
+			// des requests entspricht! in diesem FALL !!POST!!
+			//  DAFÜR EINFACH AUF SERVER_SEITE DIE DO POST METHODE WIEDER EINKOMMENTIEREN! (TouchpointServiceServlet.java)
+			// NICHT VERGESSEN! SERVER NEUSTART!!
 
 			// evaluate the result using getStatusLine(), use constants in
 			// HttpStatus
 
+				// KOMMT VOM SERVER ZURÜCK
 			/* if successful: */
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
 
-			// create an object input stream using getContent() from the
-			// response entity (accessible via getEntity())
+				// create an object input stream using getContent() from the
+				// response entity (accessible via getEntity())
+				InputStream responseBody = response.getEntity().getContent(); // die client API ist sehr verschachtelt!
+				ObjectInputStream responseBodyReader = new ObjectInputStream(responseBody);
 
-			// read the touchpoint object from the input stream
+				// read the touchpoint object from the input stream
+				AbstractTouchpoint receivedTouchpoint = (AbstractTouchpoint) responseBodyReader.readObject();
 
-			// return the object that you have read from the response
+				// return the object that you have read from the response
+				show("received touchpoint: %s", receivedTouchpoint);
+
+			}
+
 			return null;
+
 		} catch (Exception e) {
 			logger.error("got exception: " + e, e);
 			throw new RuntimeException(e);

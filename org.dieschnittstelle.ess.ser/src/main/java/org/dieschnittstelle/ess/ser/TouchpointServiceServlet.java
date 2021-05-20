@@ -64,6 +64,10 @@ public class TouchpointServiceServlet extends HttpServlet {
 		// no need to check the uri that has been used
 
 		// obtain the executor for reading out the touchpoints from the servlet context using the touchpointCRUD attribute
+		// Um das Objekt zu identifizieren, nutzen wir touchpointCRUDExecutor und geben dem neuen Touchpoint eine ID
+		TouchpointCRUDExecutor touchpointCRUDExecutor = (TouchpointCRUDExecutor) getServletContext().getAttribute("touchpointCRUD");
+		// jedes Servlet bekommt über die oberklasse diese methode vererbt
+		// durch den namen touchpointCRUD wird der tpexecutor quasi referenziert
 
 		try {
 			// create an ObjectInputStream from the request's input stream
@@ -75,6 +79,8 @@ public class TouchpointServiceServlet extends HttpServlet {
 			// read an AbstractTouchpoint object from the stream
 			AbstractTouchpoint tp = (AbstractTouchpoint) objectInputStream.readObject();
 			show("tp: %s" , tp);
+			// die ID wird in dem tp-objekt gesetzt durch das create!
+			tp = touchpointCRUDExecutor.createTouchpoint(tp);
 
 			// call the create method on the executor and take its return value
 		
@@ -101,6 +107,44 @@ public class TouchpointServiceServlet extends HttpServlet {
 	/*
 	 * TODO: SER4 server-side implementation of deleteTouchpoint
 	 */
+
+	@Override
+	protected void doDelete(HttpServletRequest request,
+						  HttpServletResponse response) {
+
+		TouchpointCRUDExecutor touchpointCRUDExecutor = (TouchpointCRUDExecutor) getServletContext().getAttribute("touchpointCRUD");
+
+
+		try {
+			logger.info("deDelete ist aufgerufen nach den regeln des Framworks :-)");
+			logger.info("und das nur weil ich einen HttpDelete request geschickt habe!");
+			// Durch die URI wird dann identifiziert was gesclöscht werden soll
+
+			logger.info("response status: " + response.getStatus());
+
+			// Was soll gelöscht werden ist über den httpDelete request gekommen und steht am ende der URI!
+			// das muss ich herausholen
+			String uri = request.getRequestURI();
+			logger.info(uri);
+			String path = "/api/touchpoints/";
+			String stringIdToDelete = uri.substring(path.length());
+			logger.info(stringIdToDelete);
+
+			long toDeleteId = Long.parseLong(stringIdToDelete);
+			touchpointCRUDExecutor.deleteTouchpoint(toDeleteId);
+
+
+			// Hardcoding test
+			//long toDeleteId = 1;
+			//touchpointCRUDExecutor.deleteTouchpoint(toDeleteId);
+
+
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+	}
 
 
 }

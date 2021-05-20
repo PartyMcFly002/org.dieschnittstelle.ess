@@ -6,6 +6,7 @@ import java.util.concurrent.Future;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
@@ -167,19 +168,6 @@ public class ShowTouchpointService {
 		}
 	}
 
-	/**
-	 * TODO SER4
-	 * 
-	 * @param tp
-	 */
-	public void deleteTouchpoint(AbstractTouchpoint tp) {
-		logger.info("deleteTouchpoint(): will delete: " + tp);
-
-		createClient();
-
-		logger.debug("client running: {}",client.isRunning());
-
-	}
 
 	/**
 	 * TODO SER3
@@ -270,10 +258,11 @@ public class ShowTouchpointService {
 
 				// return the object that you have read from the response
 				show("received touchpoint: %s", receivedTouchpoint);
+				// received == tp -> false        received.equals(tp) -> true
+				return receivedTouchpoint;
 
 			}
-
-			return null;
+			return null;			// Für die tests, den tpuchpoint, der ampfangen wurde mus returned werden!!
 
 		} catch (Exception e) {
 			logger.error("got exception: " + e, e);
@@ -281,6 +270,59 @@ public class ShowTouchpointService {
 		}
 
 	}
+
+	/**
+	 * TODO SER4
+	 * 	19.05.2021
+	 * 	Muss ähnlich sein wie das create nur, dass jetzt ein HtttpDelete eingesetzt werden müsste.
+	 * 	Die redundanz in der URI kann ich mit der tp.getID() machen.
+	 * 	wir bracuhen keine streams und können dirket in den respons TRUE oder FALS hineinschreiben
+	 * 	fürs löschen den CRUDececutor nutzen.
+	 * @param tp
+	 */
+	public void deleteTouchpoint(AbstractTouchpoint tp) {
+		logger.info("deleteTouchpoint(): will delete: " + tp);
+
+		createClient();
+
+		logger.debug("client running: {}",client.isRunning());
+
+		try {
+
+			// create delete request for the api/touchpoints/id uri
+			HttpDelete request = new HttpDelete("http://localhost:8080/api/touchpoints/" + tp.getId());
+
+			// Packet abschicken!
+			// execute the request, which will return a Future<HttpResponse> object
+			Future<HttpResponse> responseFuture = client.execute(request,null);
+
+			// get the response from the Future object
+			HttpResponse response = responseFuture.get();		// wir warten mit get bis ein rüchgabe da ist
+			// get ist so implementiert, das es warte. sobald was von get kommt, dann wissen wir, das was vom server kam
+
+			// log the status line
+			logger.info("entity is set and request is executed");
+			logger.info("response status: " + response.getStatusLine()); // gibt den status vom server zurückkommende status zurück
+
+			// KOMMT VOM SERVER ZURÜCK
+			/* if successful: */
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
+				logger.info("Delete Request on Server accepted and doDelete() is running on server because !die Regeln des Frameworks!");
+				logger.info("Touchpoint with ID " + tp.getId()+ " was deleted");
+			}
+			else
+			{
+				logger.info("Something goes wrong");
+				logger.info("response status: " + response.getStatusLine());
+			}
+
+		} catch (Exception e) {
+			logger.error("got exception: " + e, e);
+			throw new RuntimeException(e);
+		}
+
+	}
+
 
 	/**
 	 * 

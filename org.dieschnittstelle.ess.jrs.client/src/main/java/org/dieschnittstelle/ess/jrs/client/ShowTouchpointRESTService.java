@@ -36,6 +36,7 @@ public class ShowTouchpointRESTService {
 		ResteasyClient client = new ResteasyClientBuilder().build();
 		ResteasyWebTarget target = client.target("http://localhost:8080/api/" + (async ? "async/" : ""));
 		ITouchpointCRUDService serviceProxy = target.proxy(ITouchpointCRUDService.class);
+		// Das ganze ersetzt die SER aufgabe mit dem ganzen httpGet httpPost usw.
 
 		show("serviceProxy: " + serviceProxy + " of class: " + serviceProxy.getClass());
 

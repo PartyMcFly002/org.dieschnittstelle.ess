@@ -6,9 +6,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/touchpoints")
-@Consumes({MediaType.APPLICATION_JSON})
-@Produces({MediaType.APPLICATION_JSON})
+// DAS ist die schnittstelle!!!!!!!!!!!!!!!!
+// Diese ganzen annotation sind zur laufzeit der JVM bekannt
+// Wir gebene durch die annotationen zusatzinformationen an das interface für das JRS Framework
+@Path("/touchpoints")	// da sich in allen URIs die /touchpoints befindet, könnne wir das ausfaktorisieren
+@Consumes({MediaType.APPLICATION_JSON})		 // Ich erwate Jason format
+@Produces({MediaType.APPLICATION_JSON})		// ich gebe jason format aus
 public interface ITouchpointCRUDService {
 	
 	@GET
@@ -18,7 +21,7 @@ public interface ITouchpointCRUDService {
 	@Path("/{touchpointId}")
 	StationaryTouchpoint readTouchpoint(@PathParam("touchpointId") long id);
 
-	@POST
+	@POST	// hier ist kein @PathParam nötig und die es wird automatisch aus dem Body das tp element genommen
 	StationaryTouchpoint createTouchpoint(StationaryTouchpoint touchpoint);
 	
 	@DELETE

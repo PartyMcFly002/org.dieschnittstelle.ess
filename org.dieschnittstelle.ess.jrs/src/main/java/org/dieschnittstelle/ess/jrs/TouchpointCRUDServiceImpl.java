@@ -28,6 +28,8 @@ public class TouchpointCRUDServiceImpl implements ITouchpointCRUDService {
      *
      * @param servletContext
      */
+    // durch das @Context sagen wir dem Framework, das wir den servletContext brauchen
+    // jetzt weiss das framework, das ich ein servletContext benötige
     public TouchpointCRUDServiceImpl(@Context ServletContext servletContext, @Context HttpServletRequest request) {
         logger.info("<constructor>: " + servletContext + "/" + request);
         // read out the dataAccessor

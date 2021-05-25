@@ -7,6 +7,12 @@ import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 
 import org.dieschnittstelle.ess.jrs.IProductCRUDService;
+import org.dieschnittstelle.ess.jrs.ITouchpointCRUDService;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+
+import static org.dieschnittstelle.ess.utils.Utils.show;
 
 public class ProductCRUDRESTClient {
 
@@ -20,7 +26,19 @@ public class ProductCRUDRESTClient {
 		/*
 		 * create a client for the web service using ResteasyClientBuilder and ResteasyWebTarget
 		 */
-		serviceProxy = null;
+
+
+		///serviceProxy = null; // hier solllen wir das atribut instanciieren mit den mitteln, die uns RestEasy zur verfügung stellt
+
+		// ANFORDERUNG 3!
+		// Kopiert aus ShowTouchpointRESTService  !! Siehe SU Video zum Touchpoint aufbau (Live Demo)
+		ResteasyClient client = new ResteasyClientBuilder().build();
+		ResteasyWebTarget target = client.target("http://localhost:8080/api/");
+		serviceProxy = target.proxy(IProductCRUDService.class);
+		// Das ganze ersetzt die SER aufgabe mit dem ganzen httpGet httpPost....
+
+
+		show("serviceProxy: " + serviceProxy + " of class: " + serviceProxy.getClass());
 	}
 
 	public AbstractProduct createProduct(IndividualisedProductItem prod) {

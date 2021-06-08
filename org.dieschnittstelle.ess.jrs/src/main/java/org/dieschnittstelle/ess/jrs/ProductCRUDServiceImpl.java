@@ -8,6 +8,7 @@ import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Context;
 //import org.apache.logging.log4j.Logger;
 
@@ -33,6 +34,7 @@ public class ProductCRUDServiceImpl implements IProductCRUDService {
 	// durch das @Context sagen wir dem Framework, das wir den servletContext brauchen
 	// jetzt weiss das framework, das ich ein servletContext benötige
 	// Liegt im webapp/src/main/java......./ser/ProductServletContextListener
+	// wir müssen uns nicht darum kümmern dieses Objekt selbst peer konstructor zu instaziieren
 	public ProductCRUDServiceImpl(@Context ServletContext servletContext, @Context HttpServletRequest request) {
 		//logger.info("<constructor>: " + servletContext + "/" + request);
 		// read out the dataAccessor
@@ -44,33 +46,39 @@ public class ProductCRUDServiceImpl implements IProductCRUDService {
 	@Override
 	public IndividualisedProductItem createProduct(
 			IndividualisedProductItem prod) {
-		// TODO Auto-generated method stub
-		return null;
+		return (IndividualisedProductItem) this.productCRUD.createObject(prod);
 	}
 
 	@Override
 	public List<IndividualisedProductItem> readAllProducts() {
-		// TODO Auto-generated method stub
-		return null;
+		List<IndividualisedProductItem> allProducts = (List) this.productCRUD.readAllObjects();		// Mithilfe des CRUD-executers arbeiten und die Produkte auslesen
+																									// die methoden readAll stellt der CRUD zur verfügung ich muss nur noch casten!
+		return allProducts;
 	}
 
 	@Override
 	public IndividualisedProductItem updateProduct(long id,
 			IndividualisedProductItem update) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return (IndividualisedProductItem) this.productCRUD.updateObject(this.productCRUD.readObject(id)); // Easy :-)
 	}
 
 	@Override
 	public boolean deleteProduct(long id) {
-		// TODO Auto-generated method stub
-		return false;
+
+		return this.productCRUD.deleteObject(id);			// EASY
 	}
 
 	@Override
 	public IndividualisedProductItem readProduct(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		IndividualisedProductItem it = (IndividualisedProductItem) this.readProduct(id);
+		if(it != null)
+		{
+			return it;
+		} else
+		{
+			throw new NotFoundException("The product with id: " + id + "does not exist!!!");
+		}
 	}
 	
 }

@@ -23,7 +23,7 @@ import java.util.List;
  *  Anschließend müssen wir eine annotation auf abstract product setzten um das dadruch entstanndene Problem zu lösen
  * Abguckbar in induvi abstrct touchpoint  
  */
-
+// ANFORDERUNG 2
 @Path("/products")	// da sich in allen URIs die /products befindet, könnne wir das ausfaktorisieren
 @Consumes({MediaType.APPLICATION_JSON})		 // Ich erwate Jason format
 @Produces({MediaType.APPLICATION_JSON})		// ich gebe jason format aus

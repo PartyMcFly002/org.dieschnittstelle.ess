@@ -39,6 +39,7 @@ public interface IProductCRUDService {
 	@Path("/{Id}")
 	public IndividualisedProductItem updateProduct(@PathParam("Id") long id,
 												   IndividualisedProductItem update); // keine ahnung was mit dem zweiten übergabeparameter ist. angeblich darf nur eine da sein
+    // der zweite wird im body übergeben!
 
 	@DELETE
 	@Path("/{Id}")

@@ -1,6 +1,10 @@
 package org.dieschnittstelle.ess.wsv.client;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.logging.log4j.Logger;
@@ -31,9 +35,28 @@ public class AccessRESTServiceWithInterpreter {
 
 		/*
 		 * TODO: create a client for the web service using Proxy.newProxyInstance()
-		 */
-        ITouchpointCRUDService serviceProxy = null;
+		 */                                                             // aus dem video WS20 WSV Demo muss uns nicht weiter interessieren
+        ITouchpointCRUDService serviceProxy = (ITouchpointCRUDService) Proxy.newProxyInstance(AccessRESTServiceWithInterpreter.class.getClassLoader(),
+                new Class[]{ITouchpointCRUDService.class},
+                new InvocationHandler() { // das ist der helfer zum aufrufen vom invokation handler
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        // Verhindern, das ein stackoverflow passiert falls die methode auf dem objekt die to String-methode ist.
+                        if("toString".equals((method.getName())))
+                        {
+                            return "Proxy Objekt";
+                        }
+                        show("invoke(): " + method.getName() + "with args " + (args == null ? "<no arguments>" : Arrays.asList(args) )  );
+                        // 13:27 weitermachen 
+                        return null;
+                    }
+                });
+        // Das "Class[]{ITouchpointCRUDService.class" ist ein array von interfacec, die der Proxy bereitstellen soll
+        // Die ganze arbeit macht der Invokation-Handler. Ich muss den Rückgabetypen in die klasse casten, den ich brauche
 
+        // Method und args representiert jetzt in der Invoke den methodenaufruf, den der Proxy jetzt bearbeiten soll bei einem invoke
+
+        // Durch das show und die toString concatenation, wird: Alle aufrufe auf service proxy leiten weiter zum invoke(dem helfer)
         show("serviceProxy: " + serviceProxy);
 
         step();

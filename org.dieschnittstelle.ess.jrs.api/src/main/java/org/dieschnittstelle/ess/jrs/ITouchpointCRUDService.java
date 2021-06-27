@@ -20,7 +20,6 @@ public interface ITouchpointCRUDService {
 	@GET
 	@Path("/{touchpointId}")
 	StationaryTouchpoint readTouchpoint(@PathParam("touchpointId") long id);
-
 	@POST	// hier ist kein @PathParam nötig und die es wird automatisch aus dem Body das tp element genommen
 	StationaryTouchpoint createTouchpoint(StationaryTouchpoint touchpoint);
 	
@@ -30,6 +29,11 @@ public interface ITouchpointCRUDService {
 		
 	/*
 	 * TODO JRS1: add a new annotated method for using the updateTouchpoint functionality of TouchpointCRUDExecutor and implement it
+	 *
 	 */
 
+	/*	@PUT
+		@Path("/{touchpointId}")
+		public StationaryTouchpoint updateTouchpoint(@PathParam("touchpointId") long id,StationaryTouchpoint touchpoint);
+	*/
 }

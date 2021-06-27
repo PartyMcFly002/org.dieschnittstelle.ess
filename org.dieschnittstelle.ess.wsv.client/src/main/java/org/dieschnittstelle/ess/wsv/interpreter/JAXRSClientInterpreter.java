@@ -54,6 +54,9 @@ public class JAXRSClientInterpreter implements InvocationHandler {
     public JAXRSClientInterpreter(Class serviceInterface,String baseurl) {
 
         // TODO: implement the constructor!
+        this.serviceInterface = serviceInterface;           // siehe notizen und aufzeihnungen 34:50 (WSV1-...)
+        this.baseurl = baseurl;
+        this.commonPath =   ( (Path) serviceInterface.getAnnotation(Path.class)).value();
 
         logger.info("<constructor>: " + serviceInterface + " / " + baseurl + " / " + commonPath);
     }
@@ -81,6 +84,14 @@ public class JAXRSClientInterpreter implements InvocationHandler {
             if (meth.getParameterAnnotations()[0].length > 0 && meth.getParameterAnnotations()[0][0].annotationType() == PathParam.class) {
                 // TODO: handle PathParam on the first argument - do not forget that in this case we might have a second argument providing a bodyValue
                 // TODO: if we have a path param, we need to replace the corresponding pattern in the url with the parameter value
+
+                // Video ESS_6_WSV_5
+
+                String variableExpr;        // dafür das anschaiue was in dee Conditin drinn  ist
+                String argumentValue;       // variableExpr kommt aud Pathparam
+                                            // arguments kommt aus args[] args muss gecheckt werden ob > 1 ist
+
+                url = url.replace(variableExpr, argumentValue);
             }
             else {
                 // if we do not have a path param, we assume the argument value will be sent via the body of the request

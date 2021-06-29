@@ -31,15 +31,18 @@ public class AccessRESTServiceWithInterpreter {
 		 * TODO WSV1 (here and following TODOs): create an instance of the invocation handler passing the service
 		 * interface and the base url
 		 */
-        JAXRSClientInterpreter invocationHandler = null;
+                                                                            // Wurzelurl unseres Services Das sind die zwei zutaten von denen wir gesprochen haben
+        JAXRSClientInterpreter invocationHandler = new JAXRSClientInterpreter(ITouchpointCRUDService.class ,"http://localhost:8080/api"); // WSV-1-DEMO 39:25
 
 		/*
 		 * TODO: create a client for the web service using Proxy.newProxyInstance()
 		 */                                                             // aus dem video WS20 WSV Demo muss uns nicht weiter interessieren
         ITouchpointCRUDService serviceProxy = (ITouchpointCRUDService) Proxy.newProxyInstance(AccessRESTServiceWithInterpreter.class.getClassLoader(),
                 new Class[]{ITouchpointCRUDService.class},
-                new InvocationHandler() { // das ist der helfer zum aufrufen vom invokation handler
-                    @Override
+                invocationHandler
+                // das hier runten ist der dummy. den haben wir zu testzwecken erstellt
+                  /* new InvocationHandler() { // das ist der helfer zum aufrufen vom invokation handler
+                 @Override
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                         // Verhindern, das ein stackoverflow passiert falls die methode auf dem objekt die to String-methode ist.
                         if("toString".equals((method.getName())))
@@ -50,14 +53,15 @@ public class AccessRESTServiceWithInterpreter {
                         // 13:27 weitermachen 
                         return null;
                     }
-                });
+                }*/
+                    );
         // Das "Class[]{ITouchpointCRUDService.class" ist ein array von interfacec, die der Proxy bereitstellen soll
         // Die ganze arbeit macht der Invokation-Handler. Ich muss den Rückgabetypen in die klasse casten, den ich brauche
 
         // Method und args representiert jetzt in der Invoke den methodenaufruf, den der Proxy jetzt bearbeiten soll bei einem invoke
 
         // Durch das show und die toString concatenation, wird: Alle aufrufe auf service proxy leiten weiter zum invoke(dem helfer)
-        show("serviceProxy: " + serviceProxy);
+        show("serviceProxy: " + serviceProxy + serviceProxy.getClass().getName());
 
         step();
 
@@ -67,17 +71,17 @@ public class AccessRESTServiceWithInterpreter {
 
 
         // TODO: comment-in the call to delete() once this is handled by the invocation handler
-//		// 2) delete the touchpoint if there is one
-//		if (tps.size() > 0) {
-//          step();
-//			show("deleted: "
-//					+ serviceProxy.deleteTouchpoint(tps.get(0).getId()));
-//		}
-//
+		// 2) delete the touchpoint if there is one
+		if (tps.size() > 0) {
+          step();
+			show("deleted: "
+					+ serviceProxy.deleteTouchpoint(tps.get(0).getId()));
+		}
+
 //		// 3) create a new touchpoint
         step();
 
-        Address addr = new Address("Luxemburger Strasse", "10", "13353",
+        Address addr = new Address("Luxemburger Strasse", "99", "13353",
                 "Berlin");
         StationaryTouchpoint tp = new StationaryTouchpoint(-1,
                 "BHT Verkaufsstand", addr);

@@ -29,11 +29,11 @@ public interface ITouchpointCRUDService {
 		
 	/*
 	 * TODO JRS1: add a new annotated method for using the updateTouchpoint functionality of TouchpointCRUDExecutor and implement it
-	 *
+	 * hinzugefügt am 29.06.2021
 	 */
 
-	/*	@PUT
-		@Path("/{touchpointId}")
-		public StationaryTouchpoint updateTouchpoint(@PathParam("touchpointId") long id,StationaryTouchpoint touchpoint);
-	*/
+	@PUT
+	@Path("/{touchpointId}")
+	public StationaryTouchpoint updateTouchpoint(@PathParam("touchpointId") long id,StationaryTouchpoint touchpoint);
+
 }

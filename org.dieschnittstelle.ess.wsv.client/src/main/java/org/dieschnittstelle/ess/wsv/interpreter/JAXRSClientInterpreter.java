@@ -8,7 +8,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
-import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.*;
 import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.*;
@@ -19,9 +19,6 @@ import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ByteArrayEntity;
 
 import org.dieschnittstelle.ess.utils.Http;
@@ -95,6 +92,15 @@ public class JAXRSClientInterpreter implements InvocationHandler {
                 // TODO: handle PathParam on the first argument - do not forget that in this case we might have a second argument providing a bodyValue
                 // TODO: if we have a path param, we need to replace the corresponding pattern in the url with the parameter value
 
+                // Handelt sich um eine HTTP-request update? Wenn ja muss ich das objekt mitsenden
+                // unten wird dann unterschieden um welczhen request es sich handelt die url zusammensetzung bleibt gleich
+                if (args.length > 1)
+                {
+                    bodyValue = args[1];
+                }
+
+                // Dieser Code sollte sowohl für delete als auch für get gelten (get für einen bestimmten touchpoint)
+                // die url sieht ja dann lgiech aus
 
                 String variableExpr;        // PathParam
                 String argumentValue;
@@ -156,7 +162,7 @@ public class JAXRSClientInterpreter implements InvocationHandler {
         // TODO: check which of the http method annotation is present and instantiate request accordingly passing the url
         if (meth.isAnnotationPresent(POST.class))
         {
-            request = new HttpPost((url));          // wenn ien POST zum server gehen soll
+            request = new HttpPost(url);          // wenn ien POST zum server gehen soll
         }
         else if (meth.isAnnotationPresent(GET.class))
         {
@@ -165,7 +171,11 @@ public class JAXRSClientInterpreter implements InvocationHandler {
         else if (meth.isAnnotationPresent(DELETE.class))
         {
             // die url muss ich mir oben zusammenbauen!!!
-            request = new HttpDelete((url));
+            request = new HttpDelete(url);
+        }
+        else if (meth.isAnnotationPresent(PUT.class))
+        {
+            request = new HttpPut(url);
         }
         else
         {   // nur für seine demo! aber ich mach das auch mal!

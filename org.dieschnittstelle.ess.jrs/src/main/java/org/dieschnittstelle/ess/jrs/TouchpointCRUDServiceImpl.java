@@ -5,12 +5,14 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 
 import org.apache.logging.log4j.Logger;
 import org.dieschnittstelle.ess.entities.crm.StationaryTouchpoint;
 import org.dieschnittstelle.ess.entities.crm.AbstractTouchpoint;
 import org.dieschnittstelle.ess.entities.GenericCRUDExecutor;
+import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 
 public class TouchpointCRUDServiceImpl implements ITouchpointCRUDService {
 
@@ -66,6 +68,12 @@ public class TouchpointCRUDServiceImpl implements ITouchpointCRUDService {
 
     /*
      * UE JRS1: implement the method for updating touchpoints
+     * hinzugefügt am 29.06.2021
      */
+    @Override
+    public StationaryTouchpoint updateTouchpoint(long id, StationaryTouchpoint touchpoint)
+    {
+        return (StationaryTouchpoint)  this.touchpointCRUD.updateObject(touchpoint);
+    }
 
 }

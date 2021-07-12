@@ -67,6 +67,9 @@ public class ShowStockSystem {
 	}
 
 	public void createProducts() {
+
+		// Test Ausgabe
+		show("existierende Produkte:" + productCRUD.readAllProducts());
 		// create products
 		productCRUD.createProduct(PRODUCT_1);
 		Utils.step();

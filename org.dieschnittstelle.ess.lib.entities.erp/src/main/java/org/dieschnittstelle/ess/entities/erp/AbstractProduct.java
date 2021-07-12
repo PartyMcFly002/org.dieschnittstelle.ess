@@ -20,6 +20,7 @@ import javax.json.bind.annotation.JsonbTypeSerializer;
 @JsonbTypeDeserializer(JsonbJsonTypeInfoHandler.class)
 @JsonbTypeSerializer(JsonbJsonTypeInfoHandler.class)
 // Polymorphie!!
+// weil wir mit einer standartlösung arbeiten
 public abstract class AbstractProduct implements Serializable, GenericCRUDEntity {
 
 	protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(AbstractProduct.class);

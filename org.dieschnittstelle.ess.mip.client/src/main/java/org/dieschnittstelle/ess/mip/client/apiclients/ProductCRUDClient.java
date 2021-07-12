@@ -45,7 +45,7 @@ public class ProductCRUDClient implements ProductCRUD {
 		//return null;
 	}
 
-	@Override
+	//@Override
 	public AbstractProduct readProduct(long productID) {
 		return serviceProxy.readProduct(productID);
 		//return null;

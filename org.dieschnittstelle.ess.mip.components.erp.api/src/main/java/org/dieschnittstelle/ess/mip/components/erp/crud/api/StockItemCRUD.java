@@ -8,7 +8,7 @@ import java.util.List;
 
 /*
  * TODO MIP+JPA3/4/6:
- * this interface shall be implemented using a RequestScoped bean with an EntityManager.
+ * this interface shall be implemented using an ApplicationScoped bean with an EntityManager.
  * See the comments below for hints at how to implement the methods
  */
 public interface StockItemCRUD {

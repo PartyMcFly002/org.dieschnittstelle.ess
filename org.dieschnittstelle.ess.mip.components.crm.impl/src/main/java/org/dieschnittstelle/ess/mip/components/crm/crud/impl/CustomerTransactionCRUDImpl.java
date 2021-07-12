@@ -8,7 +8,7 @@ import org.dieschnittstelle.ess.mip.components.crm.crud.api.CustomerTransactionC
 import org.dieschnittstelle.ess.mip.components.crm.crud.api.CustomerTransactionCRUD;
 import org.dieschnittstelle.ess.utils.interceptors.Logged;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Logged
-@RequestScoped
+@ApplicationScoped
 @Transactional
 /*
  * MIP: in contrast to hibernate, openjpa implementation does not accept id comparison for entity attributes in jpql queries.

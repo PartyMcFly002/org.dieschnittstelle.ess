@@ -8,7 +8,7 @@ import org.dieschnittstelle.ess.entities.erp.StockItem;
 
 /*
  * TODO MIP+JPA3/4/6:
- * this interface shall be implemented using a RequestScoped CDI bean with an EntityManager.
+ * this interface shall be implemented using a ApplicationScoped CDI bean with an EntityManager.
  * See the comments below for hints at how to implement the methods
  */
 public interface StockItemCRUD {

@@ -2,7 +2,7 @@ package org.dieschnittstelle.ess.mip.components.crm.crud.impl;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -17,7 +17,7 @@ import org.dieschnittstelle.ess.utils.interceptors.Logged;
 import static org.dieschnittstelle.ess.utils.Utils.show;
 
 @Logged
-@RequestScoped
+@ApplicationScoped
 @Transactional
 public class TouchpointCRUDImpl implements TouchpointCRUD {
 

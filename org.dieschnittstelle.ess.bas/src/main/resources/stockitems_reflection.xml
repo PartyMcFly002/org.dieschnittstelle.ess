@@ -17,6 +17,7 @@
        <class>org.dieschnittstelle.ess.basics.reflection.stockitemtypes.Milk</class>
        <units>10</units>        
        <price>109</price>
+       <expiry>29/04/2021</expiry>
     </stockitem>
 </stockitems>
 

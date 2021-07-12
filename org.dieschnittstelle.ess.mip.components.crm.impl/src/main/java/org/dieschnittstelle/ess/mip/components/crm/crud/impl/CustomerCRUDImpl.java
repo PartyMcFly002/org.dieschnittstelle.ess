@@ -1,6 +1,6 @@
 package org.dieschnittstelle.ess.mip.components.crm.crud.impl;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -11,7 +11,7 @@ import org.dieschnittstelle.ess.mip.components.crm.crud.api.CustomerCRUD;
 import org.dieschnittstelle.ess.utils.interceptors.Logged;
 
 @Logged
-@RequestScoped
+@ApplicationScoped
 @Transactional
 public class CustomerCRUDImpl implements CustomerCRUD {
 

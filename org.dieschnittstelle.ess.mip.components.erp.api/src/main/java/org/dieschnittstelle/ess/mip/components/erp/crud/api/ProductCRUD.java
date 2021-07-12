@@ -24,8 +24,8 @@ public interface ProductCRUD {
 	public List<AbstractProduct> readAllProducts();
 
 	@PUT
-	@Path("/{id}")
-	public AbstractProduct updateProduct(@PathParam("id") AbstractProduct update);
+	// @Path("/{id}")
+	public AbstractProduct updateProduct(AbstractProduct update); // @PathParam("id")  wir brauche angeblich kein PathParam (ESS_7_JPA_3 45:45), weil create post verwendet und somit sind diese sehr gut voneinander unterscheidbar
 
 	@GET
 	@Path("/{id}")

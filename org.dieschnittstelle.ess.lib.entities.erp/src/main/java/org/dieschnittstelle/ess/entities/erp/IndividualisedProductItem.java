@@ -4,9 +4,12 @@ import java.io.Serializable;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.logging.log4j.Logger;
+import org.dieschnittstelle.ess.utils.jsonb.JsonbJsonTypeInfoHandler;
 
+import javax.json.bind.annotation.JsonbTypeSerializer;
 import javax.persistence.*;
 
+@JsonbTypeSerializer(JsonbJsonTypeInfoHandler.class)		// Kopiert aus AbstractProduct DEMO JPA 1 (01:02:00)
 public class IndividualisedProductItem extends AbstractProduct implements Serializable {
 
 	protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(IndividualisedProductItem.class);
